@@ -1,10 +1,11 @@
+//variables for each sprite and their respective images
 var bg, backgroundImg;
 var iron, ironImg;
 var stoneGroup, stoneImg;
 var diamondGroup, diamondImg;
 var score=0;
 var spikeGroup, spikeImg;
-function preload() {
+function preload() {//loads all the sprite images
   backgroundImg = loadImage("images/bg.jpg");
   ironImg=loadImage("images/iron.png");
   stoneImg=loadImage("images/stone.png");
@@ -14,13 +15,13 @@ function preload() {
 
 function setup() {
   createCanvas(1000, 600);
-  bg = createSprite(580,300);
+  bg = createSprite(580,300);//creates background sprite
   bg.addImage(backgroundImg);
   bg.scale=2;
-  iron=createSprite(150,450,20,40);
+  iron=createSprite(150,450,20,40);//creates ironman sprite
   iron.addImage(ironImg);
   iron.scale=0.2;
-  ground=createSprite(500,600,1000,10);
+  ground=createSprite(500,600,1000,10);//creates invisible ground sprite
   ground.visible=false;
   stoneGroup=new Group();
   iron.setCollider("rectangle",100,0,200,400);
@@ -29,15 +30,15 @@ function setup() {
 }
 
 function draw() {
-    if(keyDown("up"))
+    if(keyDown("up"))//makes ironman fly up
     {
       iron.velocityY=-10;
     }
-    if(keyDown("left"))
+    if(keyDown("left"))//makes ironman move left
     {
       iron.x-=5;
     }
-    if(keyDown("right"))
+    if(keyDown("right"))//makes ironman move right
     {
       iron.x+=5;
     }
@@ -45,18 +46,18 @@ function draw() {
     {
       bg.y=bg.height/2;
     }
-    if(iron.x<20||iron.x>950)
+    if(iron.x<20||iron.x>950)//used to maintain ironman in the canvas
     {
       iron.x=150;
     }
-    if(iron.y<50||iron.y>600)
+    if(iron.y<50||iron.y>600)//used to maintain ironman in the canvas
     {
       iron.y=450;
     }
     iron.velocityY+=0.5;
     bg.velocityY=-5;
     iron.collide(ground);
-    generateStones();
+    generateStones();//generates a stone sprite that gets added to the stoneGroup
     for(var i=0;i<stoneGroup.length;i++)
     {
         var temp=stoneGroup.get(i);
@@ -65,7 +66,7 @@ function draw() {
             iron.collide(temp);
         }
     }
-    generateSpikes();
+    generateSpikes();//generates a spike sprite that gets added to the spikeGroup
     for(var i=0;i<(spikeGroup).length;i++)
     {
         var temp=(spikeGroup).get(i);
@@ -76,7 +77,7 @@ function draw() {
             temp=null;
         }
     }
-    generateDiamonds();
+    generateDiamonds();//generates a diamond sprite that gets added to the diamondGroup
     for(var i=0;i<diamondGroup.length;i++)
     {
         var temp=diamondGroup.get(i);
@@ -90,15 +91,15 @@ function draw() {
     drawSprites();
     textSize(20);
     fill("red");
-    text("Diamonds Collected: "+score,750,50);
+    text("Diamonds Collected: "+score,750,50);//displays score
    
 }
 function generateStones()
 {
-  if(frameCount%70===0)
+  if(frameCount%70===0)//generate stones every 70 frames
     {
         var stone=createSprite(500,-500,60,15);
-        stone.x=random(50,950);
+        stone.x=random(50,950);//sets a random x position for the stone
         stone.addImage(stoneImg);
         stone.scale=0.3;
         stone.velocityY=3;
@@ -109,10 +110,10 @@ function generateStones()
 }
 function generateDiamonds()
 {
-  if(frameCount%50===0)
+  if(frameCount%50===0)//generates diamonds every 50 frames
     {
         var diamond=createSprite(500,-500,60,15);
-        diamond.x=random(50,950);
+        diamond.x=random(50,950);//sets a random x position for the diamond
         diamond.addImage(diamondImg);
         diamond.scale=0.2;
         diamond.velocityY=2;
@@ -123,10 +124,10 @@ function generateDiamonds()
 }
 function generateSpikes()
 {
-    if(frameCount%90===0)
+    if(frameCount%90===0)//generates spikes every 90 frames
     {
         var obs=createSprite(500,-500,10,40);
-        obs.x=random(50,950);
+        obs.x=random(50,950);//sets a random x position for the spike
         obs.velocityY=3;
         obs.scale=0.3;
         obs.addImage(spikeImg);
