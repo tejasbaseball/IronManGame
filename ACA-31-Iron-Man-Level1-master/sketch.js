@@ -6,12 +6,14 @@ var diamondGroup, diamondImg;
 var score=0;
 var spikeGroup, spikeImg;
 var game_state="PLAY";
+var restart, restartImg;
 function preload() {//loads all the sprite images
   backgroundImg = loadImage("images/bg.jpg");
   ironImg=loadImage("images/iron.png");
   stoneImg=loadImage("images/stone.png");
   diamondImg=loadImage("images/diamond.png");
   spikeImg=loadImage("images/spikes.png");
+  restartImg=loadImage("images/restart.png");
 }
 
 function setup() {
@@ -28,6 +30,10 @@ function setup() {
   iron.setCollider("rectangle",100,0,200,400);
   diamondGroup=new Group();
   spikeGroup=new Group();
+  restart=createSprite(500,300);
+  restart.addImage(restartImg);
+  restart.scale=0.3;
+  restart.visible=false;
 }
 
 function draw() {
@@ -106,7 +112,11 @@ function draw() {
       diamondGroup.setLifetimeEach(0);
       stoneGroup.setVelocityYEach(0);
       stoneGroup.setLifetimeEach(0);
-        
+      restart.visible=true;
+      if(mousePressedOver(restart))
+      {
+          restartGame();
+      }
     }
     drawSprites();
     textSize(20);
@@ -154,4 +164,14 @@ function generateSpikes()
         obs.lifetime=750;
         spikeGroup.add(obs);
     }
+}
+function restartGame()
+{
+  score=0;
+  game_state="PLAY";
+  spikeGroup.destroyEach();
+  diamondGroup.destroyEach();
+  stoneGroup.destroyEach();
+  iron.y=50;
+  restart.visible=false;
 }
