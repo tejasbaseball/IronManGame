@@ -5,6 +5,7 @@ var stoneGroup, stoneImg;
 var diamondGroup, diamondImg;
 var score=0;
 var spikeGroup, spikeImg;
+var game_state="PLAY";
 function preload() {//loads all the sprite images
   backgroundImg = loadImage("images/bg.jpg");
   ironImg=loadImage("images/iron.png");
@@ -30,63 +31,82 @@ function setup() {
 }
 
 function draw() {
-    if(keyDown("up"))//makes ironman fly up
-    {
-      iron.velocityY=-10;
+  if(game_state==="PLAY")
+  {
+      if(keyDown("up"))//makes ironman fly up
+      {
+        iron.velocityY=-10;
+      }
+      if(keyDown("left"))//makes ironman move left
+      {
+        iron.x-=5;
+      }
+      if(keyDown("right"))//makes ironman move right
+      {
+        iron.x+=5;
+      }
+      if(bg.y<=0)
+      {
+        bg.y=bg.height/2;
+      }
+      if(iron.x<20||iron.x>950)//used to maintain ironman in the canvas
+      {
+        iron.x=150;
+      }
+      if(iron.y<50)//used to maintain ironman in the canvas
+      {
+        iron.y=50;
+      }
+      iron.velocityY+=0.5;
+      bg.velocityY=-5;
+      generateStones();//generates a stone sprite that gets added to the stoneGroup
+      for(var i=0;i<stoneGroup.length;i++)
+      {
+          var temp=stoneGroup.get(i);
+          if(temp.isTouching(iron))
+          {
+              iron.collide(temp);
+          }
+      }
+      generateSpikes();//generates a spike sprite that gets added to the spikeGroup
+      for(var i=0;i<(spikeGroup).length;i++)
+      {
+          var temp=(spikeGroup).get(i);
+          if(temp.isTouching(iron))
+          {
+              score-=5;
+              temp.destroy();
+              temp=null;
+          }
+      }
+      generateDiamonds();//generates a diamond sprite that gets added to the diamondGroup
+      for(var i=0;i<diamondGroup.length;i++)
+      {
+          var temp=diamondGroup.get(i);
+          if(temp.isTouching(iron))
+          {
+              score++;
+              temp.destroy();
+              temp=null;
+          }
+      }
+      if(score<=-10||iron.y>610)
+      {
+        game_state="END";
+      }
     }
-    if(keyDown("left"))//makes ironman move left
+    else 
     {
-      iron.x-=5;
-    }
-    if(keyDown("right"))//makes ironman move right
-    {
-      iron.x+=5;
-    }
-    if(bg.y<=0)
-    {
-      bg.y=bg.height/2;
-    }
-    if(iron.x<20||iron.x>950)//used to maintain ironman in the canvas
-    {
-      iron.x=150;
-    }
-    if(iron.y<50||iron.y>600)//used to maintain ironman in the canvas
-    {
-      iron.y=450;
-    }
-    iron.velocityY+=0.5;
-    bg.velocityY=-5;
-    iron.collide(ground);
-    generateStones();//generates a stone sprite that gets added to the stoneGroup
-    for(var i=0;i<stoneGroup.length;i++)
-    {
-        var temp=stoneGroup.get(i);
-        if(temp.isTouching(iron))
-        {
-            iron.collide(temp);
-        }
-    }
-    generateSpikes();//generates a spike sprite that gets added to the spikeGroup
-    for(var i=0;i<(spikeGroup).length;i++)
-    {
-        var temp=(spikeGroup).get(i);
-        if(temp.isTouching(iron))
-        {
-            score-=5;
-            temp.destroy();
-            temp=null;
-        }
-    }
-    generateDiamonds();//generates a diamond sprite that gets added to the diamondGroup
-    for(var i=0;i<diamondGroup.length;i++)
-    {
-        var temp=diamondGroup.get(i);
-        if(temp.isTouching(iron))
-        {
-            score++;
-            temp.destroy();
-            temp=null;
-        }
+      bg.velocityY = 0;
+      iron.velocityY=0;
+      iron.velocityX=0;
+      spikeGroup.setVelocityYEach(0);
+      spikeGroup.setLifetimeEach(0);
+      diamondGroup.setVelocityYEach(0);
+      diamondGroup.setLifetimeEach(0);
+      stoneGroup.setVelocityYEach(0);
+      stoneGroup.setLifetimeEach(0);
+        
     }
     drawSprites();
     textSize(20);
